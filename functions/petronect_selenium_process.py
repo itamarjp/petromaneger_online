@@ -33,6 +33,7 @@ if db_config.MODE == 'development':
     app.config['MYSQL_DB'] = db_config.MYSQL_DB
     app.config['MYSQL_CURSORCLASS'] = db_config.MYSQL_CURSORCLASS
     app.config['FLASK_DEBUG'] = 1
+    executable_path = None
 else:
     app.config['MYSQL_HOST'] = db_config.CLEAR_DB_MYSQL_HOST
     app.config['MYSQL_USER'] = db_config.CLEAR_DB_MYSQL_USER
@@ -40,6 +41,7 @@ else:
     app.config['MYSQL_DB'] = db_config.CLEAR_DB_MYSQL_DB
     app.config['MYSQL_CURSORCLASS'] = db_config.MYSQL_CURSORCLASS
     app.config['FLASK_DEBUG'] = 0
+    executable_path = db_config.executable_path
 
 # init MYSQL
 mysql = MySQL(app)
@@ -246,77 +248,80 @@ def exportaPropostas():
 def downloadFilesProcess(listIds, loginPetronect, SenhaPetronect, username, titleList, idArticles, id, baixar_anexos):
     global browser
     pasta = os.path.realpath(criarPastaUser(username, titleList))
-    # print(listIds)
-    # options = webdriver.ChromeOptions()
-    # options.add_argument('--disable-gpu')
-    # options.add_argument('--no-sandbox')
-    # options.add_argument("--start-maximized")
-    # options.add_argument('--disable-dev-shm-usage')
-    # preferences = {"download.default_directory": pasta}
-    # options.add_experimental_option("prefs", preferences)
-    # browser = webdriver.Chrome(chrome_options=options)
-    # browser.get("https://www.petronect.com.br/irj/portal/anonymous/pt")
-    # loginSite(loginPetronect, SenhaPetronect)
-    # painelOportunidades()
-    # trocaFrame()
-    # query()
-    # for i in listIds:
-    #     currentWindow = browser.title
-    #     entraOportunidade(i)
-    #     selecionaNulo()
-    #     checkId = verif_id(i)
-    #     if checkId:
-    #         iDsNaoEncontradas.append(i)
-    #         continue
-    #     clicaOport()
-    #     while currentWindow == "Painel de Oportunidades - SAP NetWeaver Portal":
-    #         time.sleep(2)
-    #         currentWindow = browser.title
-    #     trocaFrame()
-    #     resumoOpt()
-    #     while currentWindow == "Solicitação de cotação - SAP NetWeaver Portal":
-    #         time.sleep(2)
-    #         try:
-    #             browser.switch_to.window(browser.window_handles[1])
-    #         except:
-    #             pass
-    #         currentWindow = browser.title
-    #     downloadOpt()
-    #     while currentWindow == "Aplicação Floor Plan Manager para OIF-Baixar arquivo 'Resumo_da_oportunidade.pdf'":
-    #         time.sleep(2)
-    #         try:
-    #             browser.switch_to.window(browser.window_handles[1])
-    #         except:
-    #             pass
-    #         currentWindow = browser.title
-    #     trocaFrame()
-    # if baixar_anexos == 'sim':
-        #     baixarAnexos()
-        #     while currentWindow == "Solicitação de cotação - SAP NetWeaver Portal":
-        #         time.sleep(2)
-        #         try:
-        #             browser.switch_to.window(browser.window_handles[1])
-        #         except:
-        #             pass
-        #         currentWindow = browser.title
-        #     downloadOpt()
-        #     while currentWindow == "Aplicação Floor Plan Manager para OIF-Baixar arquivo 'Anexos.zip'":
-        #         time.sleep(2)
-        #         try:
-        #             browser.switch_to.window(browser.window_handles[1])
-        #         except:
-        #             pass
-        #         currentWindow = browser.title
-        #     trocaFrame()
-    #     voltaPainelOport()
-    #     renomeiaAnexos(i, pasta)
-    #     while currentWindow == "Solicitação de cotação - SAP NetWeaver Portal":
-    #         time.sleep(2)
-    #         currentWindow = browser.title
-    #     trocaFrame()
-    #     print("ciclo")
-    # sair()
-    # browser.close()
+    print(listIds)
+    options = webdriver.ChromeOptions()
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-sandbox')
+    options.add_argument("--start-maximized")
+    options.add_argument('--disable-dev-shm-usage')
+    preferences = {"download.default_directory": pasta}
+    options.add_experimental_option("prefs", preferences)
+    if executable_path == None:
+        browser = webdriver.Chrome(chrome_options=options)
+    else:
+        browser = webdriver.Chrome(executable_path=executable_path, chrome_options=options)
+    browser.get("https://www.petronect.com.br/irj/portal/anonymous/pt")
+    loginSite(loginPetronect, SenhaPetronect)
+    painelOportunidades()
+    trocaFrame()
+    query()
+    for i in listIds:
+        currentWindow = browser.title
+        entraOportunidade(i)
+        selecionaNulo()
+        checkId = verif_id(i)
+        if checkId:
+            iDsNaoEncontradas.append(i)
+            continue
+        clicaOport()
+        while currentWindow == "Painel de Oportunidades - SAP NetWeaver Portal":
+            time.sleep(2)
+            currentWindow = browser.title
+        trocaFrame()
+        resumoOpt()
+        while currentWindow == "Solicitação de cotação - SAP NetWeaver Portal":
+            time.sleep(2)
+            try:
+                browser.switch_to.window(browser.window_handles[1])
+            except:
+                pass
+            currentWindow = browser.title
+        downloadOpt()
+        while currentWindow == "Aplicação Floor Plan Manager para OIF-Baixar arquivo 'Resumo_da_oportunidade.pdf'":
+            time.sleep(2)
+            try:
+                browser.switch_to.window(browser.window_handles[1])
+            except:
+                pass
+            currentWindow = browser.title
+        trocaFrame()
+        if baixar_anexos == 'sim':
+            baixarAnexos()
+            while currentWindow == "Solicitação de cotação - SAP NetWeaver Portal":
+                time.sleep(2)
+                try:
+                    browser.switch_to.window(browser.window_handles[1])
+                except:
+                    pass
+                currentWindow = browser.title
+            downloadOpt()
+            while currentWindow == "Aplicação Floor Plan Manager para OIF-Baixar arquivo 'Anexos.zip'":
+                time.sleep(2)
+                try:
+                    browser.switch_to.window(browser.window_handles[1])
+                except:
+                    pass
+                currentWindow = browser.title
+            trocaFrame()
+        voltaPainelOport()
+        renomeiaAnexos(i, pasta)
+        while currentWindow == "Solicitação de cotação - SAP NetWeaver Portal":
+            time.sleep(2)
+            currentWindow = browser.title
+        trocaFrame()
+        print("ciclo")
+    sair()
+    browser.close()
     pdfClass = ler_pdf.pdf(pasta, id, username, titleList)
     pdfClass.listaPastasEArquivos()
     pdfClass.renomeiaArquivos()
