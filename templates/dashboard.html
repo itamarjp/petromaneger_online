@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1><small> Bem vindo: {{ session.username }}</small></h1>
+    <a class="btn btn-success" href="/add_article"> Inserir IDs</a>
+    <hr>
+    <table class="table table-striped">
+        <tr>
+            <!-- <th>Ítem</th>-->
+            <th>Nome da Lista</th>
+            <th>Usuário</th>
+            <th>Data</th>
+            <th>Download Realizado?</th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for article in articles %}
+            <tr>
+                <form action="{{ url_for('delete_article', id=article.id) }}" method="post">
+                    <!--        <td>{{article.id}}</td>-->
+                    <td><a href="listaDash/{{ article.id }}">{{ article.title }}</td>
+                    </a>
+                    <td>{{ article.author }}</td>
+                    <td>{{ article.create_date }}</td>
+                    <td>{{ article.downloadComplete }}</td>
+                </form>
+
+                <td>
+                    <form action="{{ url_for('delete_article', id=article.id) }}" method="post">
+                        <a href="edit_article/{{ article.id }}" class="btn btn-default ">Editar</a>
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="submit" value="Deletar" class="btn btn-danger">
+                        <a href="listIds/{{ article.id }}" class="btn btn-success">Iniciar</a>
+                        {% if article.downloadComplete == 'Sim' %}
+                            <a href="enviarEmails/{{ article.id }}" class="btn btn-warning">Enviar Emails</a></td>
+                            </form>
+                        {% else %}
+                            <a href="enviarEmails/{{ article.id }}" class="btn btn-warning disabled">Enviar Emails</a>
+                            </td></form>
+                        {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

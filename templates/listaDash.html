@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <table class="table table-striped">
+    <tr>
+        <!-- <th>Ítem</th>-->
+        <th>Id Oportunidade</th>
+        <th>Descrição</th>
+        <th>Data Abertura</th>
+        <th>Data Vencimento</th>
+        <th>Horário</th>
+        <th>Proposta Divulgada</th>
+    </tr>
+    {% for id in records %}
+        <tr>
+            <td>{{ id.id_oportunidade }}</td>
+            <td>{{ id.descricao }}</td>
+            <td>{{ id.data_abertura }}</td>
+            <td>{{ id.data_vencimento }}</td>
+            <td>{{ id.horario }}</td>
+            <form action="/classificacao/{{ id.id_oportunidade }}">
+                {% if id.proposta_baixada == 'True' %}
+                    <td align="center"><a href="classificacao/{{ id.id_oportunidade }}">
+                        <button type="submit" class="btn btn-info">Ver</button></td></a>
+                {% else %}
+                    <td align="center">
+                        <button class="btn btn-light" disabled>Ver</button>
+                    </td>
+                {% endif %}
+            </form>
+        </tr>
+    {% endfor %}
+{% endblock %}

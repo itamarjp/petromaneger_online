@@ -1,0 +1,56 @@
+
+
+{% extends 'layout.html' %}
+
+{% block body %}
+    <script type="text/javascript" language="JavaScript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" language="JavaScript"
+            src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script>
+        var dataSet = {{ res|tojson }};
+
+        $(document).ready(function () {
+            $('#example').DataTable({
+                data: dataSet,
+                columns: [
+                    {title: "Lista"},
+                    {title: "Id oportunidade"},
+                    {title: "Descrição"},
+                    {title: "Abertura"},
+                    {title: "Vencimento"},
+                    {title: "Horário"}
+                ]
+            });
+        });
+    </script>
+    <table id="example" class="display" width="100%"></table>
+    <!--      <caption style="text-align:center">Resumo das Oportunidades Baixadas</caption>-->
+
+    <!--        <tr>-->
+    <!--            <th class="text-center">Lista</th>-->
+    <!--            <th class="text-center">Id Oportunidade</th>-->
+    <!--            <th class="text-center">Descrição</th>-->
+    <!--            <th class="text-center">Data Abertura</th>-->
+    <!--            <th class="text-center">Data Vencimento</th>-->
+    <!--            <th class="text-center">Horário</th>-->
+    <!--            <th class="text-center">Proposta Baixada</th>-->
+    <!--        </tr>-->
+
+    <!--        {% for id in records %}-->
+        <!--         <tr>-->
+        <!--            <td align="center">{{id.lista}}</td>-->
+        <!--            <td align="center">{{id.id_oportunidade}}</td>-->
+        <!--            <td align="center">{{id.descricao}}</td>-->
+        <!--            <td align="center">{{id.data_abertura}}</td>-->
+        <!--            <td align="center">{{id.data_vencimento}}</td>-->
+        <!--            <td align="center">{{id.horario}}</td>-->
+
+        <!--                {% if id.proposta_baixada == 'True' %}-->
+            <!--                    <td align="center"><a href="classificacao/{{id.id_oportunidade}}"><button type="submit" class="btn btn-info">Ver</button></td></a>-->
+            <!--                {% else %}-->
+            <!--                    <td align="center"><button  class="btn btn-light" disabled>Ver</button></td>-->
+            <!--                {% endif %}-->
+        <!--          </tr>-->
+
+        <!--    {% endfor %}-->
+    <!--{% endblock %}-->

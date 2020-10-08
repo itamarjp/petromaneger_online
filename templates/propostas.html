@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <table class="table table-striped">
+        <form action="{{ url_for('propostas') }}" method="post" target="_blank">
+            <caption style="text-align:center">Propostas liberadas para download ainda não baixadas</caption>
+            {% if msg == 'Nenhuma oportunidade encontrada!' %}
+                <input class="btn btn-success" type="submit" name="submit" value="Download" disabled>
+            {% else %}
+                <input class="btn btn-success" type="submit" name="submit" value="Download">
+            {% endif %}
+        </form>
+        <tr>
+            <th class="text-center">Lista</th>
+            <th class="text-center">Id Oportunidade</th>
+            <th class="text-center">Descrição</th>
+            <th class="text-center">Data Abertura</th>
+            <th class="text-center">Data Vencimento</th>
+            <th class="text-center">Horário</th>
+        </tr>
+        {% for id in records %}
+            <tr>
+                <td align="center">{{ id.lista }}</td>
+                {% if id.proposta_baixada == 'indisponivel' %}
+                    <td align="center" bgcolor="red">Indisponível {{ id.id_oportunidade }}</td>
+                {% endif %}
+
+                <td align="center">{{ id.id_oportunidade }}</td>
+                <td align="center">{{ id.descricao }}</td>
+                <td align="center">{{ id.data_abertura }}</td>
+                <td align="center">{{ id.data_vencimento }}</td>
+                <td align="center">{{ id.horario }}</td>
+            </tr>
+        {% endfor %}
+{% endblock %}

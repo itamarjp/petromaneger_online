@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <div class="jumbotron" align="center">
+        <h2>Oportunidades para download </h2>
+        <h4> Nome da Lista: {{ titleList }} </h4>
+        {% from "includes/_formhelpers.html" import render_field %}
+    </div>
+    <div class="jumbotron">
+        <p>Lista de Ids informados para Download:</p>
+        <p></p>
+        {% for id in listIds %}
+            <h4 class="card-text">{{ id }}</h4>
+        {% endfor %}
+        <p></p>
+        <form action="{{ url_for('download', id = idList ) }}" method="post" target="_blank">
+            <a class="btn btn-danger" href="/dashboard"> Voltar </a>
+            <input class="btn btn-success" type="submit" name="submit" value="iniciar download">
+        </form>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <script type="text/javascript" language="JavaScript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" language="JavaScript"
+            src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script>
+        var dataSet = {{ res|tojson }};
+
+        $(document).ready(function () {
+            $('#example').DataTable({
+                data: dataSet,
+                columns: [
+                    {title: "Oportunidade"},
+                    {title: "Item"},
+                    {title: "Descrição"},
+                    {title: "Emp.Menor Valor"},
+                    {title: "Menor Valor"},
+                    {title: "Emp.Maior Valor"},
+                    {title: "Maior Valor"},
+                    {title: "perdeu por %"},
+                    {title: "Resultado"},
+                    {title: "Margem"}
+
+                ]
+            });
+        });
+    </script>
+    <table id="example" class="display" width="100%"></table>
+
+    <!-- <table class="table table-striped">-->
+    <!--      <caption style="text-align:center">Classificação da Sua empresa</caption>-->
+    <!--    <tr>-->
+    <!--        <th class="text-center">Item</th>-->
+    <!--        <th class="text-center">Descrição</th>-->
+    <!--        <th class="text-center">Emp.Menor Valor</th>-->
+    <!--        <th class="text-center">Menor Valor</th>-->
+    <!--        <th class="text-center">Emp.Maior Valor</th>-->
+    <!--        <th class="text-center">Maior Valor</th>-->
+    <!--        <th class="text-center">perdeu por %</th>-->
+    <!--        <th class="text-center">Resultado</th>-->
+    <!--        <th class="text-center">Margem</th>-->
+
+    <!--    </tr>-->
+    <!--    {% for id in records %}-->
+        <!--     <tr>-->
+        <!--        <td align="center">{{id.item}}</td>-->
+        <!--        <td align="center">{{id.descricao}}</td>-->
+        <!--        <td align="center">{{id.emp_menor_valor}}</td>-->
+        <!--        <td align="center">{{id.menor_valor}}</td>-->
+        <!--        <td align="center">{{id.emp_maior_val}}</td>-->
+        <!--        <td align="center">{{id.maior_val}}</td>-->
+        <!--        <td align="center">{{id.res_percentual}}</td>-->
+        <!--        <td align="center">{{id.status_sua_empresa}}</td>-->
+        <!--        <td align="center">{{id.margem_seg_menor_valor}}</td>-->
+
+
+        <!--      </tr>-->
+        <!--    {% endfor %}-->
+{% endblock %}

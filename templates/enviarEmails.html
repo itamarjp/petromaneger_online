@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <div class="jumbotron" align="center">
+        <h2>Enviar oportunidades para os Emails cadastrados</h2>
+        {% from "includes/_formhelpers.html" import render_field %}
+    </div>
+
+    <div class="jumbotron">
+        <p>Email que enviará as mensagens: <strong>{{ fromEmail }}</strong></p>
+        <p>Lista de emails de destino: </p>
+        {% for mail in mailList %}
+            <p><strong>- {{ mail }}</strong></p>
+        {% endfor %}
+
+        <form action="" method="post">
+            <a class="btn btn-danger" href="/dashboard"> Voltar </a>
+            <input class="btn btn-success" type="submit" name="submit" value="Enviar Emails">
+
+    </div>
+{% endblock %}

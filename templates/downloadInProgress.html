@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <table class="table table-striped">
+    <caption style="text-align:center">Download Completo: Propostas Baixadas</caption>
+    <tr>
+        <!-- <th>Ítem</th>-->
+        <th>Id Oportunidade</th>
+        <th>Descrição</th>
+        <th>Data Abertura</th>
+        <th>Data Vencimento</th>
+        <th>Horário</th>
+    </tr>
+    {% for id in records %}
+        <tr>
+            <td>{{ id.id_oportunidade }}</td>
+            <td>{{ id.descricao }}</td>
+            <td>{{ id.data_abertura }}</td>
+            <td>{{ id.data_vencimento }}</td>
+            <td>{{ id.horario }}</td>
+        </tr>
+    {% endfor %}
+{% endblock %}
