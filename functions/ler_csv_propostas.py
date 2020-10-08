@@ -97,9 +97,11 @@ def classifica(sort, user, idList, id, empresa):
             cur.execute(f"INSERT INTO classifica(unique_key, id_lista, Oportunidade, item, descricao, emp_menor_valor, "
                         f"menor_valor, empr_seg_men_val, seg_men_val, emp_maior_val, maior_valor, "
                         f"valor_sua_empresa, res_percentual, status_sua_empresa, margem_seg_menor_valor, user) VALUES "
-                        f"('{id + i}','{idList}','{id}','{i}','{descItem}','{empMinV}','{minValue}','{empSecMenorValor}','{secMenor}','{empMaxV}','{maxValue}','{companyValue}','{round(((1 - companyPercent) * 100), 2)}','{resultado}','{margem}','{user}')")
+                        f"('{id + i}','{idList}','{id}','{i}','{descItem}','{empMinV}','{minValue}','"
+                        f"{empSecMenorValor}','{secMenor}','{empMaxV}','{maxValue}','{companyValue}',"
+                        f"'{round(((1 - companyPercent) * 100), 2)}','{resultado}','{margem}','{user}')")
             cur.execute("UPDATE resumo_oportunidades SET func_classifica = 'analisado' WHERE "
-                        "id_oportunidade = %s", [id])
+                        "id_oportunidade = %s AND user = %s", [id, user])
             mysql.connection.commit()
             cur.close()
         except Exception as e:

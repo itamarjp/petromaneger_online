@@ -1,9 +1,7 @@
 from datetime import datetime
 from functools import wraps
-
 import mysql.connector
 from flask import flash, redirect, url_for, session, request, render_template
-
 from functions import enviar_emails, petronect_selenium_process
 from functions.exporta_propostas import *
 from functions.petronect_selenium_process import *
@@ -45,12 +43,6 @@ def sensor():
             x = x + 1
         print(exportaPropostas)
         print("Scheduler is alive!")
-
-
-# sched = BackgroundScheduler(daemon=True)
-# sched.add_job(sensor,'interval',seconds=10)
-# sched.start()
-
 
 def is_logged_in(f):
     @wraps(f)
@@ -122,7 +114,7 @@ def setup():
 
 @app.route('/')
 def index():
-    return render_template('home.html')
+    return redirect(url_for('login'))
 
 
 @app.route('/about')
@@ -253,6 +245,7 @@ def add_article():
 @app.route('/edit_article/<string:id>', methods=['GET', 'POST'])
 @is_logged_in
 def edit_article(id):
+    username = (session['username'])
     cur = mysql.connection.cursor()
     result = cur.execute("SELECT * FROM articles WHERE id = %s", [id])
     article = cur.fetchone()
@@ -266,7 +259,7 @@ def edit_article(id):
         body = request.form['body']
         cur = mysql.connection.cursor()
         app.logger.info(title)
-        cur.execute("UPDATE articles SET title=%s, body=%s WHERE id=%s", (title, body, id))
+        cur.execute("UPDATE articles SET title=%s, body=%s WHERE id=%s AND author = %s", [title, body, id, username])
         mysql.connection.commit()
         cur.close()
         flash('Lista Atualizada', 'success')
@@ -276,11 +269,12 @@ def edit_article(id):
 
 @app.route('/delete_article/<string:id>', methods=['POST'])
 @is_logged_in
-def delete_article(id):
+def delete_article(id): #alterar o query para deletar apenas os Ids do usuário logado, incluir o usuário na planilha de classifica
+    username = (session['username'])
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM articles WHERE id = %s", [id])
-    cur.execute("DELETE FROM resumo_oportunidades WHERE id = %s", [id])
-    cur.execute("DELETE FROM classifica WHERE Oportunidade = %s", [id])
+    cur.execute("DELETE FROM articles WHERE id = %s AND author = %s", [id, username])
+    cur.execute("DELETE FROM resumo_oportunidades WHERE id = %s AND user = %s", [id, username])
+    cur.execute("DELETE FROM classifica WHERE Oportunidade = %s AND user = %s", [id, username])
     mysql.connection.commit()
     cur.close()
 
@@ -288,7 +282,7 @@ def delete_article(id):
     return redirect(url_for('dashboard'))
 
 
-@app.route('/enviarEmails', defaults={'id': 'No Id'})
+# @app.route('/enviarEmails', defaults={'id': 'No Id'})
 @app.route('/listIds/<string:id>', methods=['GET', 'POST'])
 @is_logged_in
 def listIds(id):
@@ -315,30 +309,34 @@ def listIds(id):
         except:
             pass
     resultListIds = set(resultListIds)
+    if request.method == 'POST':
+        baixar_anexos = request.form['baixar_anexos']
+        print(str(baixar_anexos))
+        return redirect(url_for('download', id=id, baixar_anexos=baixar_anexos))
     return render_template('listIds.html', listIds=resultListIds, idsNotFound=idsNotFound, titleList=titleList,
                            idList=id)
 
 
-@app.route('/downloadInProgress/<string:id>', methods=['GET', 'POST'])
+@app.route('/downloadInProgress', methods=['GET', 'POST'])
 @is_logged_in
-def download(id):
+def download():
+    id = request.args.get('id')
+    baixar_anexos = request.args.get('baixar_anexos')
     username = (session['username'])
-    form = setupForm(request.form)
     cur = mysql.connection.cursor()
-    result = cur.execute(f"SELECT * FROM users WHERE username = '{username}'")
+    cur.execute(f"SELECT * FROM users WHERE username = '{username}'")
     data = cur.fetchall()
     cur.close()
     user = data[0]['usernamePet']
     passwordPet = data[0]['passwordPet']
 
-    if request.method == 'POST':
-        downloadFilesProcess(resultListIds, user, passwordPet, username, titleListFilter, idArticles, id)
-        cur = mysql.connection.cursor()
-        resumo = f"SELECT * from resumo_oportunidades where id = '{id}'"
-        cur.execute(resumo)
-        records = cur.fetchall()
-        cur.close()
-        return render_template('downloadInProgress.html', records=records)
+    downloadFilesProcess(resultListIds, user, passwordPet, username, titleListFilter, idArticles, id, baixar_anexos)
+    cur = mysql.connection.cursor()
+    resumo = f"SELECT * from resumo_oportunidades where id = '{id}'"
+    cur.execute(resumo)
+    records = cur.fetchall()
+    cur.close()
+    return render_template('downloadInProgress.html', records=records)
 
 
 @app.route('/enviarEmails/<string:id>', methods=['GET', 'POST'])
@@ -481,7 +479,10 @@ def propostas():
 
     cur = mysql.connection.cursor()
     username = (session['username'])
-    resumo = f"SELECT lista,id,id_oportunidade,user,descricao,data_abertura,data_vencimento,horario FROM resumo_oportunidades WHERE user = '{username}'  AND caminho_proposta IS NULL AND realizar_download = 'True' AND proposta_baixada IS NULL"
+    resumo = f"SELECT lista,id,id_oportunidade,user,descricao,data_abertura,data_vencimento,horario " \
+             f"FROM resumo_oportunidades WHERE user = '{username}'  " \
+             f"AND caminho_proposta IS NULL AND realizar_download = 'True' " \
+             f"AND proposta_baixada IS NULL"
     cur.execute(resumo)
     records1 = cur.fetchall()
     print(records1)

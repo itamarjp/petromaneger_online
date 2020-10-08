@@ -1,12 +1,10 @@
 import datetime
 import os
 import shutil
-
 import camelot
 import mysql.connector
 from flask import Flask
 from flask_mysqldb import MySQL
-
 from models import db_config
 
 anexos = []
@@ -38,7 +36,6 @@ mysql = MySQL(app)
 
 
 class pdf:
-
     def __init__(self, pasta, id, username, titleList):
         self.pasta = pasta
         self.id = id
@@ -50,7 +47,6 @@ class pdf:
         for file in dir:
             if file.endswith(".pdf"):
                 arquivosEncontrados.append(file)
-                # print(file)
 
     def renomeiaArquivos(self):
         for i in arquivosEncontrados:
@@ -61,17 +57,9 @@ class pdf:
             oldName = filePath
             newName = self.pasta + '/' + idOpt + ' - ' + nomeOpt + '.pdf'
             shutil.move(oldName, newName)
-            # print('----------------------------------------------------------')
-            # print(newName)
-            # print('----------------------------------------------------------')
+
             listFiles.append(newName)
-            lista = ['Tipo da Oportunidade: ' + tipo_opt, 'Critério: ' + criterio,
-                     'ID da Oportunidade: ' + idOpt,
-                     'Nome da Oportunidade: ' + nomeOpt, 'Data Publicação: ' + dataPublic,
-                     'Inicio Periodo Cotação: ' + inicPerCotacao, 'Fim periodo de cotação: ' + fimPerCotacao]
             pdf.log(self)
-            # print('----------------------------------------------------------')
-            # print(lista)
 
     def readPdf(self, filePath):
         global tipo_opt, criterio, idOpt, nomeOpt, dataPublic, inicPerCotacao, fimPerCotacao
@@ -82,7 +70,7 @@ class pdf:
             criterio = t1.iat[3, 1]
             idOpt = t1.iat[4, 1]
             nomeOpt = t1.iat[5, 1]
-            dataPublic = t1.iat[6, 1]
+            dataPublic = (t1.iat[6, 1])
             inicPerCotacao = t1.iat[7, 1]
             fimPerCotacao = t1.iat[8, 1]
             errConversaoPdf = False
@@ -106,9 +94,9 @@ class pdf:
             cur.execute("INSERT INTO resumo_oportunidades(id, user, lista, id_oportunidade, data_abertura, "
                         "data_vencimento, horario, descricao, nome_arquivo, nome_anexo, create_date) VALUES(%s, %s, "
                         "%s, %s, %s, %s,%s, %s, %s, %s, %s)", ([self.id, self.username, self.titleList, idOpt,
-                                                                inicPerCotacao[:10], fimPerCotacao[:10], fimPerCotacao[
-                                                                                                         -8:],
-                                                                nomeOpt[13:], arquivo, anexo, dataCompleta]))
+                                                                inicPerCotacao[:10], fimPerCotacao[:10],
+                                                                fimPerCotacao[-8:],nomeOpt[13:], arquivo,
+                                                                anexo, dataCompleta]))
             mysql.connection.commit()
             cur.close()
         except Exception as e:

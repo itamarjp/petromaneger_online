@@ -10,4 +10,4 @@ CLEAR_DB_MYSQL_PASSWORD = '5a12c294'
 CLEAR_DB_MYSQL_DB = 'heroku_b7ba95eca179db5'
 CLEAR_DB_MYSQL_CURSORCLASS = 'DictCursor'
 
-MODE = 'development'
+MODE = 'prod'

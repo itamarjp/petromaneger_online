@@ -12,11 +12,22 @@
         {% for id in listIds %}
             <h4 class="card-text">{{ id }}</h4>
         {% endfor %}
+        <hr>
+        <p>Baixar Anexos?</p>
         <p></p>
-        <form action="{{ url_for('download', id = idList ) }}" method="post" target="_blank">
+        <form action="" method="post" target="_blank">
+            <label for="baixar_anexos">Sim</label>
+            <input type="radio" value="sim" name="baixar_anexos" checked="checked">
+            <label for="baixar_anexos">Não</label>
+            <input type="radio" value="nao" name="baixar_anexos">
+            <br>
+            <p></p>
             <a class="btn btn-danger" href="/dashboard"> Voltar </a>
             <input class="btn btn-success" type="submit" name="submit" value="iniciar download">
         </form>
 
     </div>
+
+
+</style>
 {% endblock %}
