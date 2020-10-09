@@ -38,6 +38,7 @@ if db_config.MODE == 'development':
     app.config['MYSQL_DB'] = db_config.MYSQL_DB
     app.config['MYSQL_CURSORCLASS'] = db_config.MYSQL_CURSORCLASS
     app.config['FLASK_DEBUG'] = 1
+    app.config['SECRET_KEY'] = 'secret_key_123'
 else:
     app.config['MYSQL_HOST'] = db_config.CLEAR_DB_MYSQL_HOST
     app.config['MYSQL_USER'] = db_config.CLEAR_DB_MYSQL_USER
@@ -45,6 +46,7 @@ else:
     app.config['MYSQL_DB'] = db_config.CLEAR_DB_MYSQL_DB
     app.config['MYSQL_CURSORCLASS'] = db_config.MYSQL_CURSORCLASS
     app.config['FLASK_DEBUG'] = 0
+    app.config['SECRET_KEY'] = 'secret_key_123'
 
 # init MYSQL
 mysql = MySQL(app)
