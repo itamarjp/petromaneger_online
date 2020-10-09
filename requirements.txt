@@ -1,4 +1,4 @@
-opencv-python==4.2.0.34
+opencv-python-headless=4.2.0.34
 alembic==1.4.2
 aniso8601==8.0.0
 camelot-py==0.8.0
