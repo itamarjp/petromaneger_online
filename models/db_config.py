@@ -13,4 +13,3 @@ CLEAR_DB_MYSQL_DB = 'heroku_62fcb13dd38c297'
 CLEAR_DB_MYSQL_CURSORCLASS = 'DictCursor'
 executable_path = os.environ.get("CROMEDRIVER_PATH")
 
-MODE = 'development'

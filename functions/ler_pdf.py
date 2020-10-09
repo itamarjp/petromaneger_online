@@ -17,20 +17,20 @@ errConversaoPdf = False
 
 app = Flask(__name__)
 
-if db_config.MODE == 'development':
-    app.config['MYSQL_HOST'] = db_config.MYSQL_HOST
-    app.config['MYSQL_USER'] = db_config.MYSQL_USER
-    app.config['MYSQL_PASSWORD'] = db_config.MYSQL_PASSWORD
-    app.config['MYSQL_DB'] = db_config.MYSQL_DB
-    app.config['MYSQL_CURSORCLASS'] = db_config.MYSQL_CURSORCLASS
-    app.config['FLASK_DEBUG'] = 1
-else:
+if os.environ.get("MODE") == 'production':
     app.config['MYSQL_HOST'] = db_config.CLEAR_DB_MYSQL_HOST
     app.config['MYSQL_USER'] = db_config.CLEAR_DB_MYSQL_USER
     app.config['MYSQL_PASSWORD'] = db_config.MYSQL_PASSWORD
     app.config['MYSQL_DB'] = db_config.CLEAR_DB_MYSQL_DB
     app.config['MYSQL_CURSORCLASS'] = db_config.MYSQL_CURSORCLASS
     app.config['FLASK_DEBUG'] = 0
+else:
+    app.config['MYSQL_HOST'] = db_config.MYSQL_HOST
+    app.config['MYSQL_USER'] = db_config.MYSQL_USER
+    app.config['MYSQL_PASSWORD'] = db_config.MYSQL_PASSWORD
+    app.config['MYSQL_DB'] = db_config.MYSQL_DB
+    app.config['MYSQL_CURSORCLASS'] = db_config.MYSQL_CURSORCLASS
+    app.config['FLASK_DEBUG'] = 1
 
 mysql = MySQL(app)
 

@@ -26,22 +26,20 @@ iframeID = ''
 
 app = Flask(__name__)
 
-if db_config.MODE == 'development':
-    app.config['MYSQL_HOST'] = db_config.MYSQL_HOST
-    app.config['MYSQL_USER'] = db_config.MYSQL_USER
-    app.config['MYSQL_PASSWORD'] = db_config.MYSQL_PASSWORD
-    app.config['MYSQL_DB'] = db_config.MYSQL_DB
-    app.config['MYSQL_CURSORCLASS'] = db_config.MYSQL_CURSORCLASS
-    app.config['FLASK_DEBUG'] = 1
-    executable_path = None
-else:
+if os.environ.get("MODE") == 'production':
     app.config['MYSQL_HOST'] = db_config.CLEAR_DB_MYSQL_HOST
     app.config['MYSQL_USER'] = db_config.CLEAR_DB_MYSQL_USER
     app.config['MYSQL_PASSWORD'] = db_config.MYSQL_PASSWORD
     app.config['MYSQL_DB'] = db_config.CLEAR_DB_MYSQL_DB
     app.config['MYSQL_CURSORCLASS'] = db_config.MYSQL_CURSORCLASS
     app.config['FLASK_DEBUG'] = 0
-    executable_path = db_config.executable_path
+else:
+    app.config['MYSQL_HOST'] = db_config.MYSQL_HOST
+    app.config['MYSQL_USER'] = db_config.MYSQL_USER
+    app.config['MYSQL_PASSWORD'] = db_config.MYSQL_PASSWORD
+    app.config['MYSQL_DB'] = db_config.MYSQL_DB
+    app.config['MYSQL_CURSORCLASS'] = db_config.MYSQL_CURSORCLASS
+    app.config['FLASK_DEBUG'] = 1
 
 # init MYSQL
 mysql = MySQL(app)
@@ -132,8 +130,7 @@ def clicaOport():  # Funciona Ok
 
 
 def selecionaNulo():  # Funciona Ok
-    wait = WebDriverWait(browser, 30)
-    eventoSelecao = wait.until(EC.element_to_be_clickable((By.XPATH, page_selectors.statusEventoSelecao)))
+
     eventoSelecao = browser.find_element_by_xpath(page_selectors.statusEventoSelecao)
     eventoSelecao.click()
     time.sleep(3)
@@ -148,7 +145,7 @@ def verif_id(i):  # Funciona Ok
     checkId = False
     try:
         j = i.rstrip()
-        buscaId = "/html[1]/body[1]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/table[1]/tbody[1]/tr[2]/td[1]/table[1]/tbody[1]/tr[3]/td[1]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/span[1]/span[1]/table[1]/tbody[1]/tr[1]/td[1]/span[1]/span[4]/table[1]/tbody[1]/tr[1]/td[1]/span[1]/span[1]/div[1]/div[1]/div[1]/span[1]/span[1]/table[1]/tbody[1]/tr[2]/td[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[2]/td[2]/a[1]/span[1]"
+        buscaId = page_selectors.busca_id
         checaID = browser.find_element_by_xpath(buscaId)
         checaIdAtributo = checaID.text
         if j in checaIdAtributo:
@@ -157,7 +154,8 @@ def verif_id(i):  # Funciona Ok
             iDsNaoEncontradas.append(idDigitada)
             checkId = False
         else:
-            checaIdAtributo = ''
+            checkId = True
+            print("Id Não Encontrada.")
     except:
         checkId = True
         print("Id Não Encontrada.")
