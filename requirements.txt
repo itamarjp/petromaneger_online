@@ -34,7 +34,7 @@ pandas==1.0.5
 passlib==1.7.2
 pbr==5.4.5
 pdfminer.six==20200517
-protobuf==3.12.2
+protobuf==3.18.3
 pycryptodome==3.9.7
 PyJWT==1.4.2
 pyparsing==2.4.7
