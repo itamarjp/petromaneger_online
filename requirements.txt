@@ -36,7 +36,7 @@ pbr==5.4.5
 pdfminer.six==20200517
 protobuf==3.18.3
 pycryptodome==3.9.7
-PyJWT==1.4.2
+PyJWT==2.15.0
 pyparsing==2.4.7
 PyPDF2==1.27.5
 python-dateutil>=2.6.1
