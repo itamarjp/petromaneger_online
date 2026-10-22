@@ -42,7 +42,7 @@ PyPDF2==1.27.5
 python-dateutil>=2.6.1
 python-editor==1.0.4
 pytz==2020.1
-requests==2.24.0
+requests==2.33.0
 selenium==3.141.0
 six==1.15.0
 sortedcontainers
